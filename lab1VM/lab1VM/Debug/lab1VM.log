@@ -1,0 +1,5 @@
+﻿  main.cpp
+E:\avt813git\lab1VM\lab1VM\main.cpp(71,19): warning C4244:  аргумент: преобразование "double" в "float", возможна потеря данных
+E:\avt813git\lab1VM\lab1VM\main.cpp(75,25): warning C4244:  аргумент: преобразование "double" в "float", возможна потеря данных
+E:\avt813git\lab1VM\lab1VM\main.cpp(85,26): warning C4244:  аргумент: преобразование "double" в "float", возможна потеря данных
+  lab1VM.vcxproj -> E:\avt813git\lab1VM\Debug\lab1VM.exe
