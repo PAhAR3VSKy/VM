@@ -3,60 +3,135 @@
 
 using namespace std;
 
-float f(double x)
+float f(double x)// f(x)
 {
 	return (float)(pow(exp(1), x) - 4 * pow(x, 2) - 3 * x);
 }
 
-float df(float x) //возвращает значение производной
+float df(float x) // f'(x)
 {
 	return (float)(pow(exp(1), x) - 8 * x - 3);
 }
 
-float d2f(float x) // значение второй производной
+float d2f(float x) // f''(x)
 {
 	return (float)(pow(exp(1), x) - 8);
 }
 
+float equivalent(float x) // эквивалентна€ функци€
+{
+	return sqrt((-(exp(1), x) + 3 * x) / 4);
+}
+
+float NewtonMethod(float a, float b, float eps)
+{
+	cout << "-------------------------" << endl;
+	cout << "метод Ќьютона" << endl;
+	float x0, x;
+	int i = 0;
+	if (f(a) > 0 && d2f(a) > 0 || f(a) < 0 && d2f(a) < 0)
+	{
+		x0 = a;
+	}
+	else if (f(b) > 0 && d2f(b) > 0 || f(b) < 0 && d2f(b) < 0)
+	{
+		x0 = b;
+	}
+	else
+	{
+		cout << " нет приблизительного значени€ " << endl;
+		return -1;
+	}
+	cout << "x0 = " << x0 << endl;
+	x = x0;
+	do
+	{
+		x = x - f(x) / df(x);
+		i++;
+	} while (abs(f(x))> eps && i < i < 10000);
+	cout << " оличество итераций = " << i << endl;
+	return x;
+}
+
+float IterationMethod(double a, double b, double eps)
+{
+	cout << "-------------------------" << endl;
+	cout << "метод простых итераций" << endl;
+	float x, x0;
+	int i = 0;
+	x0 = a;
+	x = x0;
+	cout << "x0 = " << x0;
+	do
+	{
+		x = equivalent(x0);
+		i++;
+	} while (abs(x-x0)>eps);
+	cout << " оличество итерацций = " << i << endl;
+	return x;
+}
+
+float secantMethod(float a, float b, float eps)
+{
+	float x0, x1, x;
+	int i = 0;
+	if (f(a) > 0 && d2f(a) > 0 || f(a) < 0 && d2f(a) < 0)
+	{
+		x0 = a;
+	}
+	else if (f(b) > 0 && d2f(b) > 0 || f(b) < 0 && d2f(b) < 0)
+	{
+		x0 = b;
+	}
+	else
+	{
+		cout << " нет приблизительного значени€ " << endl;
+		return -1;
+	}
+	x1 = x0 + eps;
+	cout << "x0 = " << x0
+		<< endl << "x1 = " << x1 << endl;
+	do
+	{
+		x = x1 - (((x1 - x0) * f(x1)) / (f(x0) - f(x1)));		
+		x0 = x1;
+		x1 = x;
+		i++;
+	} while (abs(x1 - x0) < eps && i < 10000);
+	cout << " оличество итераций = " << i << endl;
+	return x;
+}
+
 int main()
 {
-	int exit = 0, i = 0;//переменные дл€ выхода и цикла
-	double x0, xn;// вычисл€емые приближени€ дл€ корн€
-	double a, b, eps;// границы отрезка и необходима€ точность
-	do {
-		i = 0;
-		cout << "Please input [a;b]\n=>";
-		cin >> a >> b; // вводим границы отрезка, на котором будем искать корень
-		cout << "\nPlease input epsilon\n=>";
-		cin >> eps; // вводим нужную точность вычислений
-		if (a > b) // если пользователь перепутал границы отрезка, мен€ем их местами
+	setlocale(LC_ALL, "ru");
+	float a, b, eps;
+	int count;
+	cout << "a: " << endl;
+	cin >> a;
+	cout << "b: " << endl;
+	cin >> b;
+	cout << "eps: " << endl;
+	cin >> eps;
+	while (1)
+	{
+		cout << "1. ћетод Ќьютона"
+			<< endl << "2. ћетод простых итераций"
+			<< endl << "3. ћетод секущих" << endl;
+		cin >> count;
+		switch (count)
 		{
-			x0 = a;
-			a = b;
-			b = x0;
+		case 1:
+			NewtonMethod(a, b, eps);
+			break;
+		case 2:
+			IterationMethod(a, b, eps);
+			break;
+		case 3:
+			secantMethod(a, b, eps);
+			break;
 		}
-		if (f(a) * f(b) > 0) // если знаки функции на кра€х отрезка одинаковые, то здесь нет корн€
-			cout << "\nError! No roots in this interval\n";
-		else
-		{
-			if (f(a) * d2f(a) > 0)
-				x0 = a;
-			else
-				x0 = b;
-			xn = x0 - f(x0) / df(x0); // считаем первое приближение
-			cout << ++i << "-th iteration = " << xn << "\n";
-			while (fabs(x0 - xn) > eps) // пока не достигнем необходимой точности, будет продолжать вычисл€ть
-			{
-				x0 = xn;
-				xn = x0 - f(x0) / df(x0); // непосредственно формула Ќьютона
-				cout << ++i << "-th iteration = " << xn << "\n";
-			}
-			cout << "\nRoot = " << xn; // вывод вычисленного корн€
-		}
-		cout << "\nExit?=>";
-		cin >> exit;
-	} while (exit != 1); // пока пользователь не ввел exit = 1
+	}
 
-	return 0;
 
 }
