@@ -41,7 +41,7 @@ double NonLinearEquations::d2f(double x)
 }
 double NonLinearEquations::equivalent(double x)
 {
-	return (exp(x) - 4 * pow(x, 2)) / 3;
+	return sqrt((exp(x) - 3 * x) / 4);
 }
 
 double NonLinearEquations::NewtonMethod()
@@ -76,18 +76,17 @@ double NonLinearEquations::NewtonMethod()
 
 double NonLinearEquations::IterationMethod()
 {
+	double x1 = (a + b) / 2;
+	double x0;
 	
-	double x0 = (a + b) / 2;
-	double x = x0;
 	int i = 0;
 	do
 	{
+		x0 = x1;
+		x1 = equivalent(x0);
 		i++;
-		x0 = x;
-		x = equivalent(x);
-	} while (abs(x-x0)>eps);
-	cout << "Количество итераций: " << i << endl;
-	return x;
+	} while (abs(x0 - x1) < eps);
+	return x1;
 }
 
 double NonLinearEquations::secantMethod()
