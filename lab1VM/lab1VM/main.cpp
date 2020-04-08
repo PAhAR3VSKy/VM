@@ -6,22 +6,20 @@ using namespace std;
 class NonLinearEquations
 {
 private:
-	double a, b, eps;
+	double eps;
 	double f(double);
 	double df(double);
 	double d2f(double);
 	double equivalent(double);
 public:
-	double NewtonMethod();
-	double IterationMethod();
-	double secantMethod();
-	NonLinearEquations(double, double, double);
+	double NewtonMethod(double, double);
+	double IterationMethod(double, double);
+	double secantMethod(double, double);
+	NonLinearEquations(double);
 };
 
-NonLinearEquations::NonLinearEquations(double a, double b, double eps)
+NonLinearEquations::NonLinearEquations( double eps)
 {
-	this->a = a;
-	this->b = b;
 	this->eps = eps;
 }
 
@@ -42,9 +40,10 @@ double NonLinearEquations::d2f(double x)
 double NonLinearEquations::equivalent(double x)
 {
 	return sqrt((exp(x) - 3 * x) / 4);
+	//return ((exp(x) - 4 * pow(x, 2)) / 3);
 }
 
-double NonLinearEquations::NewtonMethod()
+double NonLinearEquations::NewtonMethod(double a, double b)
 {
 	
 	double x0, 
@@ -74,22 +73,24 @@ double NonLinearEquations::NewtonMethod()
 	return x;
 }
 
-double NonLinearEquations::IterationMethod()
+double NonLinearEquations::IterationMethod(double a, double b)
 {
 	double x1 = (a + b) / 2;
-	double x0;
+	double x0 = x1;
 	
 	int i = 0;
 	do
 	{
-		x0 = x1;
 		x1 = equivalent(x0);
+		if (fabs(x1 - x0) < eps) break;
+		x0 = x1;
 		i++;
-	} while (abs(x0 - x1) < eps);
+	} while (i < 20000);
+	cout << "Количество итераций: " << i << endl;
 	return x1;
 }
 
-double NonLinearEquations::secantMethod()
+double NonLinearEquations::secantMethod(double a, double b)
 {
 	double res = b,
 		fx,
@@ -112,16 +113,12 @@ int main()
 {
 	setlocale(LC_ALL, "ru");
 
-	float a, b, eps;
+	double eps;
 	int count;
-	cout << "a: " << endl;
-	cin >> a;
-	cout << "b: " << endl;
-	cin >> b;
 	cout << "eps: " << endl;
 	cin >> eps;
 
-	NonLinearEquations equations(a, b, eps);
+	NonLinearEquations equations(eps);
 
 	while (1)
 	{
@@ -132,13 +129,19 @@ int main()
 		switch (count)
 		{
 		case 1:
-			cout << equations.NewtonMethod() << endl;
+			cout << equations.NewtonMethod(-1, 0) << endl;
+			cout << equations.NewtonMethod(0, 1) << endl;
+			cout << equations.NewtonMethod(4, 5) << endl;
 			break;
 		case 2:
-			cout << equations.IterationMethod() << endl;
+			cout << equations.IterationMethod(-1, 0) << endl;
+			cout << equations.IterationMethod(0, 1) << endl;
+			cout << equations.IterationMethod(4, 5) << endl;
 			break;
 		case 3:
-			cout << equations.secantMethod() << endl;
+			cout << equations.secantMethod(-1, 0) << endl;
+			cout << equations.secantMethod(0, 1) << endl;
+			cout << equations.secantMethod(4, 5) << endl;
 			break;
 		}
 	}
