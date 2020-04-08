@@ -47,7 +47,8 @@ double NonLinearEquations::equivalent(double x)
 double NonLinearEquations::NewtonMethod()
 {
 	
-	double x0, x;
+	double x0, 
+		x;
 	int i = 0;
 	if (f(a) > 0 && d2f(a) > 0 || f(a) < 0 && d2f(a) < 0)
 	{
@@ -69,6 +70,7 @@ double NonLinearEquations::NewtonMethod()
 		x0 = x;
 		x = x0 - f(x0) / df(x0);
 	} while (abs(x-x0)>eps);
+	cout << "Количество итераций: " << i << endl;
 	return x;
 }
 
@@ -84,6 +86,7 @@ double NonLinearEquations::IterationMethod()
 		x0 = x;
 		x = equivalent(x);
 	} while (abs(x-x0)>eps);
+	cout << "Количество итераций: " << i << endl;
 	return x;
 }
 
@@ -95,10 +98,12 @@ double NonLinearEquations::secantMethod()
 	int i = 0;
 	do
 	{
+		i++;
 		fx = f(res);
 		f0x = f(a);
 		res = res - fx / (fx - f0x) * (res - a);
 	} while (abs(fx) > eps);
+	cout << "Количество итераций: " << i << endl;
 	return res;
 }
 
