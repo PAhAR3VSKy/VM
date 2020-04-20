@@ -49,13 +49,13 @@ double NonLinearEquations::NewtonMethod(double a, double b)
 	double x0, 
 		x;
 	int i = 0;
-	if (f(a) > 0 && d2f(a) > 0 || f(a) < 0 && d2f(a) < 0)
-	{
-		x0 = a;
-	}
-	else if (f(b) > 0 && d2f(b) > 0 || f(b) < 0 && d2f(b) < 0)
+	if (f(b) > 0 && d2f(b) > 0 || f(b) < 0 && d2f(b) < 0)
 	{
 		x0 = b;
+	}
+	else if (f(a) > 0 && d2f(a) > 0 || f(a) < 0 && d2f(a) < 0)
+	{
+		x0 = a;
 	}
 	else
 	{
@@ -82,10 +82,9 @@ double NonLinearEquations::IterationMethod(double a, double b)
 	do
 	{
 		x1 = equivalent(x0);
-		if (fabs(x1 - x0) < eps) break;
 		x0 = x1;
 		i++;
-	} while (i < 20000);
+	} while (fabs(x1 - x0) > eps);
 	cout << "Количество итераций: " << i << endl;
 	return x1;
 }
@@ -122,26 +121,26 @@ int main()
 
 	while (1)
 	{
-		cout << "1. Метод Ньютона"
-			<< endl << "2. Метод простых итераций"
-			<< endl << "3. Метод секущих" << endl;
+		cout << "1. Метод Ньютона" << endl
+			 << "2. Метод простых итераций" << endl
+			 << "3. Метод секущих" << endl;
 		cin >> count;
 		switch (count)
 		{
 		case 1:
-			cout << equations.NewtonMethod(-1, 0) << endl;
-			cout << equations.NewtonMethod(0, 1) << endl;
-			cout << equations.NewtonMethod(4, 5) << endl;
+			cout << equations.NewtonMethod(-1, 0) << endl
+				 << equations.NewtonMethod(0, 1) << endl
+				 << equations.NewtonMethod(4, 5) << endl;
 			break;
 		case 2:
-			cout << equations.IterationMethod(-1, 0) << endl;
-			cout << equations.IterationMethod(0, 1) << endl;
-			cout << equations.IterationMethod(4, 5) << endl;
+			cout << equations.IterationMethod(-1, 0) << endl
+				 << equations.IterationMethod(0, 1) << endl
+				 << equations.IterationMethod(4, 5) << endl;
 			break;
 		case 3:
-			cout << equations.secantMethod(-1, 0) << endl;
-			cout << equations.secantMethod(0, 1) << endl;
-			cout << equations.secantMethod(4, 5) << endl;
+			cout << equations.secantMethod(-1, 0) << endl
+				 << equations.secantMethod(0, 1) << endl
+				 << equations.secantMethod(4, 5) << endl;
 			break;
 		}
 	}
