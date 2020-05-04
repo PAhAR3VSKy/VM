@@ -77,6 +77,7 @@ namespace lab2VM
         {
             double[,] matrixA = new double[Size, Size];
             double[] matrixB = new double[Size];
+            double[] matrixCout = new double[Size];
 
             matrixA[0, 0] = 3;  matrixA[0, 1] = 1;  matrixA[0, 2] = 10;
             matrixA[1, 0] = 14; matrixA[1, 1] = 2;  matrixA[1, 2] = 3;
@@ -84,7 +85,11 @@ namespace lab2VM
 
             matrixB[0] = 18;    matrixB[1] = 35;    matrixB[2] = 31;
 
-            Gauss_Method(matrixA, matrixB);
+            matrixCout = Gauss_Method(matrixA, matrixB);
+            for (int i = 0; i < Size; i++)
+                matrixCout[i] = Math.Round(matrixCout[i], 0, MidpointRounding.ToEven);
+
+            Console.WriteLine("{0}", string.Join("\n", matrixCout));
         }
     }
 }

@@ -1,0 +1,6 @@
+D:\ProjectGit\VM\lab2VM\lab2VM\bin\Debug\lab2VM.exe.config
+D:\ProjectGit\VM\lab2VM\lab2VM\bin\Debug\lab2VM.exe
+D:\ProjectGit\VM\lab2VM\lab2VM\bin\Debug\lab2VM.pdb
+D:\ProjectGit\VM\lab2VM\lab2VM\obj\Debug\lab2VM.csprojAssemblyReference.cache
+D:\ProjectGit\VM\lab2VM\lab2VM\obj\Debug\lab2VM.exe
+D:\ProjectGit\VM\lab2VM\lab2VM\obj\Debug\lab2VM.pdb
