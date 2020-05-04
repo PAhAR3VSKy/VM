@@ -12,27 +12,76 @@ namespace lab2VM
         
         public static int Size = 3;
 
+        //static double convergence(double[,]A)
+        //{
+        //    double count = 0;
+        //    double tempValue = 0;
+        //    for (int i = 0; i < Size; i++)
+        //    {
+        //        for (int j = 0; j < Size; j++)
+        //        {
+        //            tempValue += Math.Abs(A[i, j]);
+        //        }
+        //        if (Math.Abs(A[i, i]) > tempValue - Math.Abs(A[i, i]))
+        //            count++;
+        //    }
+        //    return count;
+        //}
+
+        static double[] maxElement(double[,]A)
+        {
+            int index = 0;
+            double[] result = new double[2];
+            double max = Math.Abs(A[0,0]);
+            for (int i = 0; i < Size; i++)  // Поиск строки с максимальным элементом
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    if (Math.Abs(A[i, j]) > max)
+                    {
+                        max = Math.Abs(A[i, j]);
+                        index = i;
+                    }
+                }
+            }
+            result[0] = max;
+            result[1] = index;
+            return result;
+        }
+
+
+        //static double[] SimpleIteration(double[,]A, double[] b) //доделать условие на сходимость 
+        //{
+        //    double[] tempMass = new double[Size];
+        //    double tempValue = 0;
+        //    //Условие на сходимость
+        //    while (true)
+        //    {
+        //        if (!(convergence(A) == Size))
+        //        {
+
+        //        }
+        //    }
+        //}
+
         static double[] Gauss_Method(double[,] A, double[] b)
         {
             int k = 0,
                 index = 0;
-            double max;
+            double max = 0;
             double[] x = new double[Size];
+            double[] tempMass = new double[2];
+            tempMass = maxElement(A);
 
-            max = Math.Abs(A[0, 0]);
+            max = tempMass[0];
+            index = (int)tempMass[1];
             while (k < Size)
             {
-                for (int i = 0; i < Size; i++)  // Поиск строки с максимальным элементом
-                {
-                    for (int j = 0; j < Size; j++)
-                    {
-                        if (Math.Abs(A[i, j]) > max)
-                        {
-                            max = Math.Abs(A[i, j]);
-                            index = i;
-                        }
-                    }
-                }
+                tempMass = maxElement(A); // Поиск строки с максимальным элементом
+
+                max = tempMass[0];
+                index = (int)tempMass[1];
+
                 // Перестановка строк
                 if (max < 0)    // нет ненулевых диагональных элементов
                 {
