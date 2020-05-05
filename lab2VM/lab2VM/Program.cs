@@ -12,57 +12,86 @@ namespace lab2VM
         
         public static int Size = 3;
 
-        //static double convergence(double[,]A)
-        //{
-        //    double count = 0;
-        //    double tempValue = 0;
-        //    for (int i = 0; i < Size; i++)
-        //    {
-        //        for (int j = 0; j < Size; j++)
-        //        {
-        //            tempValue += Math.Abs(A[i, j]);
-        //        }
-        //        if (Math.Abs(A[i, i]) > tempValue - Math.Abs(A[i, i]))
-        //            count++;
-        //    }
-        //    return count;
-        //}
-
-        static double[] maxElement(double[,]A)
+        static double convergence(double[,] A)
         {
-            int index = 0;
-            double[] result = new double[2];
-            double max = Math.Abs(A[0,0]);
-            for (int i = 0; i < Size; i++)  // Поиск строки с максимальным элементом
+            double count = 0;
+            double tempValue = 0;
+            for (int i = 0; i < Size; i++)
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    if (Math.Abs(A[i, j]) > max)
-                    {
-                        max = Math.Abs(A[i, j]);
-                        index = i;
-                    }
+                    tempValue += Math.Abs(A[i, j]);
                 }
+                if (Math.Abs(A[i, i]) > tempValue - Math.Abs(A[i, i]))
+                    count++;
             }
-            result[0] = max;
-            result[1] = index;
-            return result;
+            return count;
+        }
+
+        static void Iter_Form(double[,]A, double[]b) //получение итерационной формы системы
+        {
+            double[,] C = new double[Size, Size];
+            double[] d = new double[Size];
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    if (i == j)
+                        C[i, j] = 0;
+                    else
+                        C[i, j] = -A[i, j] / A[i, i];
+                }
+                d[i] = b[i] / A[i, i];
+            }
+        }
+
+        static void Check_Convergence(double[,]C, double[]d)
+        {
+            int summ = 0;
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                    summ = (int)(summ + C[i, j] * C[i, j]);
+            }
+
+            if (Math.Sqrt(Math.Abs(summ)) > 1)
+            {
+                Console.WriteLine("Данная система не удовлетворяет условию сходимости");
+                return null;
+            }
+            else
+                return 0;
         }
 
 
-        //static double[] SimpleIteration(double[,]A, double[] b) //доделать условие на сходимость 
-        //{
-        //    double[] tempMass = new double[Size];
-        //    double tempValue = 0;
-        //    //Условие на сходимость
-        //    while (true)
-        //    {
-        //        if (!(convergence(A) == Size))
-        //        {
 
-        //        }
-        //    }
-        //}
+        static double[] Simple_Iteration(double[,] A, double[] b) //метод простых итераций
+        {
+            double[] x0 = new double[Size];
+            double[] X = new double[Size];
+            double[] E = new double[Size];
+            double delta;
+            x0 = b;
+            // do while
+            for (int i = 0; i < Size; i++)
+            {
+                X[i] = 0;
+                for (int j = 0; j < Size; j++)
+                {
+                    X[i] = X[i] + A[i, j] * x0[j];
+                }
+                X[i] = X[i] + b[i];
+                E[i] = Math.Abs(X[i] - x0[i]);
+            }
+            delta = E[0];
+
+            for (int i = 0; i < Size; i++)
+            {
+                if (delta < E[i])
+                    delta = E[i];
+            }
+            x0 = X;
+        }
 
         static double[] Gauss_Method(double[,] A, double[] b)
         {
@@ -71,16 +100,21 @@ namespace lab2VM
             double max = 0;
             double[] x = new double[Size];
             double[] tempMass = new double[2];
-            tempMass = maxElement(A);
 
-            max = tempMass[0];
-            index = (int)tempMass[1];
             while (k < Size)
             {
-                tempMass = maxElement(A); // Поиск строки с максимальным элементом
-
-                max = tempMass[0];
-                index = (int)tempMass[1];
+                max = Math.Abs(A[0, 0]);
+                for (int i = 0; i < Size; i++)  // Поиск строки с максимальным элементом
+                {
+                    for (int j = 0; j < Size; j++)
+                    {
+                        if (Math.Abs(A[i, j]) > max)
+                        {
+                            max = Math.Abs(A[i, j]);
+                            index = i;
+                        }
+                    }
+                }
 
                 // Перестановка строк
                 if (max < 0)    // нет ненулевых диагональных элементов
