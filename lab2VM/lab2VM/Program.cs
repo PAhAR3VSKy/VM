@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace lab2VM
 {
+    
     class Program
     {
         
@@ -28,10 +29,8 @@ namespace lab2VM
             return count;
         }
 
-        static void Iter_Form(double[,]A, double[]b) //получение итерационной формы системы
+        static void Iter_Form(double[,]A, double[]b, ref double[,] C, ref double[]d) //получение итерационной формы системы
         {
-            double[,] C = new double[Size, Size];
-            double[] d = new double[Size];
             for (int i = 0; i < Size; i++)
             {
                 for (int j = 0; j < Size; j++)
@@ -45,7 +44,7 @@ namespace lab2VM
             }
         }
 
-        static void Check_Convergence(double[,]C, double[]d)
+        static bool Check_Convergence(ref double[,]C, ref double[]d)
         {
             int summ = 0;
             for (int i = 0; i < Size; i++)
@@ -57,110 +56,60 @@ namespace lab2VM
             if (Math.Sqrt(Math.Abs(summ)) > 1)
             {
                 Console.WriteLine("Данная система не удовлетворяет условию сходимости");
-                return null;
+                return false;
             }
             else
-                return 0;
+                return true;
         }
 
 
 
-        static double[] Simple_Iteration(double[,] A, double[] b) //метод простых итераций
+        static double[] Simple_Iteration(ref double[,] A, ref double[] b) //метод простых итераций
         {
+            double[,] matrixC = new double[Size, Size];
+            double[] matrixD = new double[Size];
             double[] x0 = new double[Size];
             double[] X = new double[Size];
             double[] E = new double[Size];
             double delta;
             x0 = b;
-            // do while
-            for (int i = 0; i < Size; i++)
+
+            Iter_Form(A, b, ref matrixC, ref matrixD);
+            while(!(Check_Convergence(ref matrixC, ref matrixD)))
             {
-                X[i] = 0;
-                for (int j = 0; j < Size; j++)
-                {
-                    X[i] = X[i] + A[i, j] * x0[j];
-                }
-                X[i] = X[i] + b[i];
-                E[i] = Math.Abs(X[i] - x0[i]);
+                // перестановка строк
             }
-            delta = E[0];
-
-            for (int i = 0; i < Size; i++)
+            do
             {
-                if (delta < E[i])
-                    delta = E[i];
-            }
-            x0 = X;
-        }
-
-        static double[] Gauss_Method(double[,] A, double[] b)
-        {
-            int k = 0,
-                index = 0;
-            double max = 0;
-            double[] x = new double[Size];
-            double[] tempMass = new double[2];
-
-            while (k < Size)
-            {
-                max = Math.Abs(A[0, 0]);
-                for (int i = 0; i < Size; i++)  // Поиск строки с максимальным элементом
-                {
-                    for (int j = 0; j < Size; j++)
-                    {
-                        if (Math.Abs(A[i, j]) > max)
-                        {
-                            max = Math.Abs(A[i, j]);
-                            index = i;
-                        }
-                    }
-                }
-
-                // Перестановка строк
-                if (max < 0)    // нет ненулевых диагональных элементов
-                {
-                    Console.WriteLine("Решение получить невозможно из-за нулевого столбца");
-                    Console.WriteLine(index + " матрицы A\n");
-                    return null;
-                }
                 for (int i = 0; i < Size; i++)
                 {
-                    double temp1 = A[k, i];
-                    A[k, i] = A[index, i];
-                    A[index, i] = temp1;
+                    X[i] = 0;
+                    for (int j = 0; j < Size; j++)
+                        X[i] = X[i] + matrixC[i, j] * x0[j];
+                    X[i] = X[i] + matrixD[i];
+                    E[i] = Math.Abs(X[i] - x0[i]);
                 }
-                double temp2 = b[k];
-                b[k] = b[index];
-                b[index] = temp2;
-                // Нормализация уравнений
-                for (int i = k; i < Size; i++)
+                delta = E[0];
+
+                for (int i = 0; i < Size; i++)
                 {
-                    double temp = A[i, k];
-                    if (Math.Abs(temp) < 0) continue;   // для нулевого коэффициента пропустить
-                    for (int j = 0; j < Size; j++)
-                        A[i, j] = A[i, j] / temp;
-                    b[i] = b[i] / temp;
-                    if (i == k) continue;   // уравнение не вычитать само из себя
-                    for (int j = 0; j < Size; j++)
-                        A[i, j] = A[i, j] - A[k, j];
-                    b[i] = b[i] - b[k];
+                    if (delta < E[i])
+                        delta = E[i];
                 }
-                k++;
-            }
-            // обратная подстановка
-            for (k = Size - 1; k >= 0; k--)
-            {
-                x[k] = b[k];
-                for (int i = 0; i < k; i++)
-                    b[i] = b[i] - A[i, k] * x[k];
-            }
-            return x;
+                x0 = X;
+            } while (delta <= 0.00001);
+
+            return X;
         }
+
+    
         static void Main(string[] args)
         {
+            SLAU matrix = new SLAU();
+
             double[,] matrixA = new double[Size, Size];
             double[] matrixB = new double[Size];
-            double[] matrixCout = new double[Size];
+            double[] matrixCout;
 
             matrixA[0, 0] = 3;  matrixA[0, 1] = 1;  matrixA[0, 2] = 10;
             matrixA[1, 0] = 14; matrixA[1, 1] = 2;  matrixA[1, 2] = 3;
@@ -168,7 +117,7 @@ namespace lab2VM
 
             matrixB[0] = 18;    matrixB[1] = 35;    matrixB[2] = 31;
 
-            matrixCout = Gauss_Method(matrixA, matrixB);
+            matrixCout = matrix.Gauss_Method(matrixA, matrixB);
             for (int i = 0; i < Size; i++)
                 matrixCout[i] = Math.Round(matrixCout[i], 0, MidpointRounding.ToEven);
 
