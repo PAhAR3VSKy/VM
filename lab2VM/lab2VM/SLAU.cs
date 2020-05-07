@@ -4,8 +4,8 @@ namespace lab2VM
 
     class SLAU
     {
-        
-        public void Print(double[,]A, double[]b, int n)
+
+        private void Print(double[,]A, double[]b, int n)
         {
             for (int i = 0; i < n; i++)
             {
@@ -17,11 +17,84 @@ namespace lab2VM
             }
         }
 
+        private bool Check_Convergence(double[,]A, int n)
+        {
+            double summ = 0, mid = 0;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (i == j)
+                        mid = Math.Abs(A[i, j]);
+                    else
+                        summ += Math.Abs(A[i, j]);
+                }
+                if (mid < summ)
+                    return false;
+                summ = 0;
+            }
+            return true;
+        }
+
+        private bool Check_Pogr(double[]E, double eps, int n)
+        {
+            for (int i = 0; i < n; i++)
+                if (Math.Abs(E[i]) > eps)
+                    return false;
+            return true;
+        }
+
+        public double[] Simple_Iter(double[,]A, double[]b, int n)
+        {
+            double[] x0 = new double[n];
+            double[] X = new double[n];
+            double[] E = new double[n];
+            double eps, summ;
+
+            for (int i = 0; i < n; i++)
+                X[i] = 0;
+
+            Console.WriteLine("Введите погрешность: ");
+            eps = Convert.ToDouble(Console.ReadLine());
+
+            if(!Check_Convergence(A, n))
+            {
+                Console.WriteLine("Матрица не может быт решена методом простых итераций!");
+                return null;
+            }
+            else
+            {
+                int count = 0;
+                do
+                {
+                    for (int i = 0; i < n; i++)
+                    {
+                        for (int k = 0; k < n; k++)
+                            x0[k] = X[k];
+                        summ = 0;
+
+                        for (int j = 0; j < n; j++)
+                        {
+                            if (j != i)
+                                summ += (A[i, j] * x0[j]);
+                        }
+
+                        X[i] = (b[i] - summ) / A[i, i];
+                        E[i] = X[i] - x0[i];
+                    }
+                    count++;
+                } while (!Check_Pogr(E, eps, n));
+                Console.WriteLine("Количество итераций = " + count);
+                return X;
+            }
+        }
+
         public double[] Gauss_Method(double[,] A, double[] b, int n)
         {
             int k = 0,
                 index = 0;
             double max;
+            double eps = 0.00001;
             double[] x = new double[n];
 
             while (k < n)
@@ -40,7 +113,7 @@ namespace lab2VM
                 }
 
                 // Перестановка строк
-                if (max < 0)    // нет ненулевых диагональных элементов
+                if (max < eps)    // нет ненулевых диагональных элементов
                 {
                     Console.WriteLine("Решение получить невозможно из-за нулевого столбца");
                     Console.WriteLine(index + " матрицы A\n");
