@@ -1,0 +1,3 @@
+﻿  main.cpp
+D:\ProjectGit\VM\lab3VM\lab3VM\Approximation.h(44,23): warning C4244: *=: преобразование "double" в "int", возможна потеря данных
+  lab3VM.vcxproj -> D:\ProjectGit\VM\lab3VM\Debug\lab3VM.exe

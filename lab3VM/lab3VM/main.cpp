@@ -5,12 +5,13 @@ using namespace std;
 
 int main()
 {
+	Approximation system;
 	setlocale(LC_ALL, "ru");
-	int n;
+	int n, choice;
 	cout << "Ввыедите количество точек: ";
 	cin >> n;
-	int* x = new int[n];
-	int* y = new int[n];
+	double* x = new double[n];
+	double* y = new double[n];
 	cout << "Введите точки:" << endl;
 	for (int i = 0; i < n; i++)
 	{
@@ -19,5 +20,30 @@ int main()
 		cout << "y[" << i << "] = ";
 		cin >> y[i];
 	}
+
+	system.Print(x, y, n);
+
+	cout << "Выберите метод: " << endl
+		 << "1) Интерполяционный многочлен в форме Лагранжа. " << endl
+		 << "2) Интерполяционный многочлен в форме Ньютона. " << endl
+		 << "3) Сглаживающий многочлен. " << endl;
+	cin >> choice;
+
+	switch (choice)
+	{
+	case (1):
+		cout << system.Lagrange(x, y, n);
+		break;
+	case (2):
+		cout << system.Newton(x, y, n);
+		break;
+	/*case (3):
+		cout << smoothing(n, x, y);
+		break;*/
+	default:
+		cout << "Неверный ввод!" << endl;
+		break;
+	}
+
 	return 0;
 }
