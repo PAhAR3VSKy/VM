@@ -37,9 +37,9 @@ int main()
 	case (2):
 		cout << system.Newton(x, y, n);
 		break;
-	/*case (3):
-		cout << smoothing(n, x, y);
-		break;*/
+	case (3):
+		cout << system.Smoothing(x, y, n);
+		break;
 	default:
 		cout << "Неверный ввод!" << endl;
 		break;

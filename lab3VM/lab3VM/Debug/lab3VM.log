@@ -1,3 +1,4 @@
 ﻿  main.cpp
-D:\ProjectGit\VM\lab3VM\lab3VM\Approximation.h(44,23): warning C4244: *=: преобразование "double" в "int", возможна потеря данных
+D:\ProjectGit\VM\lab3VM\lab3VM\Approximation.h(48,23): warning C4244: *=: преобразование "double" в "int", возможна потеря данных
+D:\ProjectGit\VM\lab3VM\lab3VM\Approximation.h(127,23): warning C4018: <: несоответствие типов со знаком и без знака
   lab3VM.vcxproj -> D:\ProjectGit\VM\lab3VM\Debug\lab3VM.exe
